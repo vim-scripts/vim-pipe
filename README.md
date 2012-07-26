@@ -53,41 +53,40 @@ save-switch-execute-switch, which makes life faster and easier.
 
 * Install [Pathogen][pathogen]. (You're already using Pathogen, right?)
 * Clone this project into `~/.vim/bundle/`.
-* Add this to your `.vimrc` file:
-
-```vimscript
-" You may already have this setting. Add it if not:
-filetype plugin
-```
-
 * Set a `b:vimpipe_command` variable for your buffer. The easiest way is to add
 an autocommand based on FileType. For example, in your `.vimrc` file:
 
-```vimscript
+```vim
 autocmd FileType sql       :let b:vimpipe_command="psql mydatabase"
 autocmd FileType markdown  :let b:vimpipe_command="multimarkdown"
 ```
 
-Then, when you're editing the file, `<LocalLeader>r` will send the buffer's
-content to that command, and show the output in a new scratch buffer.
+See below for various examples.
 
-## Help
+## Usage & Tips
 
-See :help vim-pipe for more.
+Once `b:vimpipe_command` is configured, type `<LocalLeader>r` to get the list
+results.  There's no need to save the file first. It works on the current
+buffer, not the contents on disk.
 
-## Tips
+### PostgreSQL
+```vim
+autocmd FileType sql       :let b:vimpipe_command="psql mydatabase"
+```
+
+See also [vim-postgresql-syntax][vim-postgresql-syntax].
 
 ### Oracle
 
 If you have an OPS$ login, it's as simple as:
-```
+```vim
 autocmd FileType sql :let b:vimpipe_command="sqlplus /"
 ```
 
 ### HTML
 
 This is only text-based, obviously, but can still speed up initial development.
-```
+```vim
 autocmd FileType html :let b:vimpipe_command="lynx -dump -stdin"
 ```
 
@@ -95,15 +94,39 @@ autocmd FileType html :let b:vimpipe_command="lynx -dump -stdin"
 
 Fast-preview the HTML:
 
-```
+```vim
 autocmd FileType mkd :let b:vimpipe_command="multimarkdown"
+autocmd FileType mkd :let b:vimpipe_filetype="html"
 ```
 
 Or combine wth the HTML tip to preview the rendered result:
 
-```
+```vim
 autocmd FileType mkd :let b:vimpipe_command="multimarkdown | lynx -dump -stdin"
 ```
+
+### MongoDB
+
+Is there an official FileType for MongoDB query files? Let's say it's `mongoql`, for all files `*.mql`:
+
+```vim
+	autocmd BufNewFile,BufReadPost *.mql setlocal filetype=mongoql
+
+	autocmd FileType mongoql :let b:vimpipe_command="mongo"
+	autocmd FileType mongoql :let b:vimpipe_filetype="json"
+```
+
+Then try editing a file called `somequery.mql` with something like this in:
+
+```
+use books;
+db.book.find( null, {author: 1, title: 1 });
+db.runCommand( {dbStats: 1} );
+```
+
+## Help
+
+See `:help vim-pipe` for more.
 
 ## Credits
 
@@ -113,3 +136,4 @@ Thanks to Steve Losh for his excellent guide to Vimscript, [Learn Vimscript the 
 [pathogen]: https://github.com/tpope/vim-pathogen/
 [learnvim]: http://learnvimscriptthehardway.stevelosh.com/
 [vimclojure]: https://github.com/kotarak/vimclojure
+[vim-postgresql-syntax]: https://github.com/krisajenkins/vim-postgresql-syntax
