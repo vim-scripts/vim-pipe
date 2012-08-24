@@ -1,8 +1,6 @@
-# Vim Pipe
+# Vim Pipe - A Productivity-Boosting Plugin
 
-## Overview
-
-Do you do this?
+## Do you do this?
 
 ```
         hack <---------- alt-tab <---------- react
@@ -57,8 +55,8 @@ save-switch-execute-switch, which makes life faster and easier.
 an autocommand based on FileType. For example, in your `.vimrc` file:
 
 ```vim
-autocmd FileType sql       :let b:vimpipe_command="psql mydatabase"
-autocmd FileType markdown  :let b:vimpipe_command="multimarkdown"
+autocmd FileType sql      let b:vimpipe_command="psql mydatabase"
+autocmd FileType markdown let b:vimpipe_command="multimarkdown"
 ```
 
 See below for various examples.
@@ -71,7 +69,7 @@ buffer, not the contents on disk.
 
 ### PostgreSQL
 ```vim
-autocmd FileType sql       :let b:vimpipe_command="psql mydatabase"
+autocmd FileType sql let b:vimpipe_command="psql mydatabase"
 ```
 
 See also [vim-postgresql-syntax][vim-postgresql-syntax].
@@ -80,29 +78,43 @@ See also [vim-postgresql-syntax][vim-postgresql-syntax].
 
 If you have an OPS$ login, it's as simple as:
 ```vim
-autocmd FileType sql :let b:vimpipe_command="sqlplus /"
+autocmd FileType sql let b:vimpipe_command="sqlplus -s /"
 ```
 
 ### HTML
 
 This is only text-based, obviously, but can still speed up initial development.
+
 ```vim
-autocmd FileType html :let b:vimpipe_command="lynx -dump -stdin"
+autocmd FileType html let b:vimpipe_command="lynx -dump -stdin"
 ```
+
+### JavaScript
+
+I usually run JavaScript in a browser, so I bind vim-pipe to JSLint, for
+code-quality checking on-the-fly.
+
+```vim
+autocmd FileType javascript let b:vimpipe_command='jslint <(cat)'
+```
+
+Note: JSLint doesn't accept input on STDIN, so this configuration uses bash's
+virtual file support. `<(cat)` takes the STDIN and re-presents it to look like a
+regular file.
 
 ### Markdown
 
 Fast-preview the HTML:
 
 ```vim
-autocmd FileType mkd :let b:vimpipe_command="multimarkdown"
-autocmd FileType mkd :let b:vimpipe_filetype="html"
+autocmd FileType mkd let b:vimpipe_command="multimarkdown"
+autocmd FileType mkd let b:vimpipe_filetype="html"
 ```
 
 Or combine wth the HTML tip to preview the rendered result:
 
 ```vim
-autocmd FileType mkd :let b:vimpipe_command="multimarkdown | lynx -dump -stdin"
+autocmd FileType mkd let b:vimpipe_command="multimarkdown | lynx -dump -stdin"
 ```
 
 ### MongoDB
@@ -110,10 +122,10 @@ autocmd FileType mkd :let b:vimpipe_command="multimarkdown | lynx -dump -stdin"
 Is there an official FileType for MongoDB query files? Let's say it's `mongoql`, for all files `*.mql`:
 
 ```vim
-	autocmd BufNewFile,BufReadPost *.mql setlocal filetype=mongoql
+autocmd BufNewFile,BufReadPost *.mql setlocal filetype=mongoql
 
-	autocmd FileType mongoql :let b:vimpipe_command="mongo"
-	autocmd FileType mongoql :let b:vimpipe_filetype="json"
+autocmd FileType mongoql let b:vimpipe_command="mongo"
+autocmd FileType mongoql let b:vimpipe_filetype="json"
 ```
 
 Then try editing a file called `somequery.mql` with something like this in:
@@ -131,7 +143,6 @@ See `:help vim-pipe` for more.
 ## Credits
 
 Thanks to Steve Losh for his excellent guide to Vimscript, [Learn Vimscript the Hard Way][learnvim], and Meikel Brandmeye of [vimclojure][vimclojure] for the inspiration.
-
 
 [pathogen]: https://github.com/tpope/vim-pathogen/
 [learnvim]: http://learnvimscriptthehardway.stevelosh.com/
